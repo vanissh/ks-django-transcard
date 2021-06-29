@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Форма транспортной карты</title>
+	{% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  </head>
+  <body>
+    <div class="testbox">
+      <form method="post" enctype="multipart/form-data">
+	  	{% csrf_token %}
+        <h1>Форма транспортной карты</h1>
+		<div class="item">
+			<p>Тип карты</p>
+			{{ form.type }}
+        </div>
+		<div class="item">
+			<p>Вид заявки</p>
+			{{ form.reason }}
+        </div>
+		<div class="item">
+          <p>ИНН</p>
+		  {{ form.inn }}
+        </div>
+		<div class="item">
+          <p>Фамилия</p>
+		  {{ form.surname }}
+        </div>
+		<div class="item">
+          <p>Имя</p>
+		  {{ form.name }}
+        </div>
+		<div class="item">
+          <p>Изображение</p>
+          {{ form.photo }}
+        </div>
+		<span>{{ error }}</span>
+        <div class="btn-block">
+          <button type="submit">Отправить</button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
