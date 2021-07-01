@@ -14,6 +14,8 @@ class Card(models.Model):
 		return str(self.inn)
 
 	class Meta:
+		verbose_name = 'Карточки'
+		verbose_name_plural = 'Карточки'
 		ordering = ["-pub_date"]
   
 class Loadout(models.Model):
@@ -27,5 +29,7 @@ class Loadout(models.Model):
 		return str(self.pub_date)
 
 	class Meta:
+		verbose_name = 'Файлы'
+		verbose_name_plural = 'Файлы'
 		ordering = ["-pub_date"]
 

@@ -32,7 +32,6 @@ ALLOWED_HOSTS = ['195.22.152.57','localhost']
 # Application definition
 
 INSTALLED_APPS = [
-	'django_cron',
 	'card',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -50,10 +49,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-CRON_CLASSES = [
-    "card.cron.MyCronJob",
 ]
 
 

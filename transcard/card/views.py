@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 from . import forms
 from . import models
+from . import cron
 
 def index(request):
 	err = ''
@@ -9,6 +10,7 @@ def index(request):
 		form = forms.CardForm(request.POST, request.FILES)
 		if form.is_valid():
 			form.save()
+			cron.MyCronJob()
 		else:
 			err = 'Форма введена неверно'
    
