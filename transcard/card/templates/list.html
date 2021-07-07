@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Форма транспортной карты</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+	{% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  </head>
+  <body>
+
+<div class="row">
+	<div class="col">
+		<div class="card card-body">
+
+			<form method="get">
+				{{myFilter.form}}
+
+		    <button class="btn btn-primary" type="submit">Search</button>
+		  </form>
+
+		</div>
+	</div>
+	
+</div>
+<br>
+
+<div class="testbox">
+	<div class="row">
+		<div class="col-md">
+			<div class="card card-body">
+				<table class="table table-sm">
+					<tr>
+						<th>ИНН</th>
+						<th>Имя</th>
+						<th>Фамилия</th>
+						<th>Тип</th>
+						<th>Причина</th>
+						<th>Фото</th>
+					</tr>
+
+					{% for card in cards %}
+
+					<tr>
+						<td>{{card.inn}}</td>
+						<td>{{card.name}}</td>
+						<td>{{card.surname}}</td>
+						<td>{{card.type}}</td> 
+						<td>{{card.reason}}</td>
+						<td><a href="/./media/{{card.photo}}">Фото</a></td>
+					</tr>
+					{% endfor %}
+
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

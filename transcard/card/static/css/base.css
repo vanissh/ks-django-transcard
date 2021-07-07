@@ -19,7 +19,7 @@ h1 {
 
 .testbox {
 	display: flex;
-	justify-content: center;
+	justify-content: left;
 	align-items: center;
 	height: inherit;
 	padding: 3px;

@@ -3,6 +3,7 @@ from django.shortcuts import render
 from . import forms
 from . import models
 from . import cron
+from . import filters
 
 def index(request):
 	err = ''
@@ -22,3 +23,14 @@ def index(request):
     }
  
 	return render(request, 'index.html', context) 
+
+def card(request):
+	cards = models.Card.objects.all()
+
+	order_count = cards.count()
+
+	myFilter =  filters.CardFilter(request.GET, queryset=cards)
+	cards = myFilter.qs 
+
+	context = {'cards':cards, 'myFilter':myFilter}
+	return render(request, 'list.html', context)
