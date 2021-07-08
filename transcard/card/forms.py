@@ -6,11 +6,12 @@ from . import models
 class CardForm(forms.ModelForm):
 	class Meta:
 		model = models.Card
-		fields = ['type', 'reason', 'inn', 'name', 'surname', 'photo']
+		fields = ['type', 'reason', 'inn', 'name', 'surname', 'photo', 'phone', 'pay_method',]
 
 		widgets = {
 			'type': forms.Select(choices=(('Школьная', 'Школьная'), ('Студенческая', 'Студенческая'))),
 			'reason': forms.Select(choices=(('Утеря', 'Утеря'), ('Ручная', 'Ручная'))),
+			'pay_method' : forms.Select(choices=[('Нал', 'Нал'),('Чек', 'Чек'),('Каспи', 'Каспи')]),
 			'inn'   : forms.TextInput(attrs={
 	   			'size': '12',
 				'pattern': '.{12}',

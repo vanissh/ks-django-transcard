@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-v7than@9069(092fv!_tu@*ljz*8c01&bv-tl)l=k9r$a6-s#6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['195.22.152.57','localhost']
+ALLOWED_HOSTS = ['card.tolemcard.kz', '195.22.152.57','localhost']
 
 
 # Application definition

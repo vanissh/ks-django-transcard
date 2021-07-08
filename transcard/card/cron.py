@@ -5,41 +5,41 @@ from zipfile import ZipFile
 
 from .models import Card, Loadout
 
+
+def makedirs(data, media, catalogs):
+	for i in catalogs:
+		if not os.path.isdir(i):
+			os.mkdir(i)
+
+
 def MyCronJob():
 	date = datetime.datetime.utcnow().strftime("%m%d")
-	
-	#Create ResultModel
-	if not os.path.isdir(f'media/{date}'):
-		loadout = Loadout()
-		loadout.st_xls = f"{date}/{date}st.xls"
-		loadout.sch_xls = f"{date}/{date}sch.xls"
-		loadout.st_images = f"{date}/{date}st.zip"
-		loadout.sch_images = f"{date}/{date}sch.zip"
-		loadout.save()
-  
-	#Create a catalog for new images
 	media = 'media/'
-	
-	try:
-		os.mkdir(media)
-	except FileExistsError:
-		print('directory media exists')
-	try:
-		os.mkdir(media+date)
-	except FileExistsError:
-		print('directory exists')
-	try:
-		os.mkdir(media+f'{date}/{date}st')
-	except FileExistsError:
-		print('directory exists')
-	try:
-		os.mkdir(media+f'{date}/{date}sch')
-	except FileExistsError:
-		print('directory exists')
+
+	def xl_wirte(self, dest, card):
+		dest.write(dest, 0, card.type)
+		dest.write(dest, 1, card.reason)
+		dest.write(dest, 2, card.name)
+		dest.write(dest, 3, card.surname)
+		dest.write(dest, 4, card.inn)
+		dest.write(dest, 5, card.phone)
+		dest.write(dest, 6, card.pay_method)
+
+	def relocate_image(self, dest, source, card):
+		if os.path.isfile(source) and not os.path.isfile(dest):
+			os.replace(source, dest)
+			card.photo.name = dest
+			card.save()
+
+
+	#Create a catalog for new images
+	makedirs(date, media, (media, media+date, media+f'{date}/st', media+f'{date}/sch'))
+
+	loadout = Loadout.objects.filter(pub_date__gte=datetime.datetime.now().replace(hour=0,minute=0,second=0))
 
 	#Load CardModels from a db
 	cards = Card.objects.all()
-	
+
 	#Write data to an excel file and copy images
 	st_book = xlwt.Workbook(encoding="utf-8")
 	sch_book = xlwt.Workbook(encoding="utf-8")
@@ -47,52 +47,34 @@ def MyCronJob():
 	sch_sheet = sch_book.add_sheet("Sch")
 	st_row = 0
 	sch_row = 0
-	st_zip = ZipFile(media + f"{date}/{date}st.zip", 'w')
-	sch_zip = ZipFile(media + f"{date}/{date}sch.zip", 'w')
+	st_zip = ZipFile(media + f"{date}/st.zip", 'w')
+	sch_zip = ZipFile(media + f"{date}/sch.zip", 'w')
+	st_path = media+f'{date}/st'
+	sch_path = media+f'{date}/sch'
 	for card in cards:
-		print(card.pub_date.strftime("%m%d"), date)
 		if card.pub_date.strftime("%m%d") == date:
 			if card.type == 'Школьная':
-				sch_sheet.write(sch_row, 0, card.type)
-				sch_sheet.write(sch_row, 1, card.reason) 
-				sch_sheet.write(sch_row, 2, card.name) 
-				sch_sheet.write(sch_row, 3, card.surname) 
-				sch_sheet.write(sch_row, 4, card.inn)
-				try:
-					os.replace(media + str(card.photo), media + f"{date}/{date}sch/{str(card.inn)+str(card.photo)[-4:]}")
-					card.photo.name = f"{date}/{date}sch/{str(card.inn)+str(card.photo)[-4:]}"
-					card.save()
-					sch_zip.write(card.photo.name)
-				except FileNotFoundError:
-					print("Файла " + media + str(card.photo)+' не существует')
-					try:
-						sch_zip.write(media+f"{date}/{date}sch/{str(card.inn)+str(card.photo)[-4:]}")
-					except FileNotFoundError:
-						print("Файл media/"+f"{date}/{date}sch/{str(card.inn)+str(card.photo)[-4:]}"+' не существует')
+				self.xl_write(sch_sheet, card)
+				self.relocate_image(media+str(card.photo), sch_path+f'/{str(card.inn)+str(card.photo)[-4:]}')
+				sch_zip.write(card.photo.name)
 				sch_row+=1
 				continue
 			if card.type == 'Студенческая':
-				st_sheet.write(st_row, 0, card.type)
-				st_sheet.write(st_row, 1, card.reason) 
-				st_sheet.write(st_row, 2, card.name) 
-				st_sheet.write(st_row, 3, card.surname) 
-				st_sheet.write(st_row, 4, card.inn)
-				try:
-					os.replace(media + str(card.photo), media + f"{date}/{date}st/{str(card.inn)+str(card.photo)[-4:]}")
-					card.photo.name = f"{date}/{date}st/{str(card.inn)+str(card.photo)[-4:]}"
-					card.save()
-					st_zip.write(card.photo.name)
-				except FileNotFoundError:
-					print("Файл media/"+str(card.photo)+' не существует')
-					try:
-						st_zip.write(media+f"{date}/{date}st/{str(card.inn)+str(card.photo)[-4:]}")
-					except FileNotFoundError:
-						print("Файл media/"+f"{date}/{date}st/{str(card.inn)+str(card.photo)[-4:]}"+' не существует')
-				sch_row+=1
+				self.xl_write(st_sheet, card)
+				self.relocate_image(media+str(card.photo), st_path+f'/{str(card.inn)+str(card.photo)[-4:]}')
+				st_zip.write(card.photo.name)
+				st_row+=1
 				continue
 		break
 	st_zip.close()
 	sch_zip.close()
-	st_book.save(media+f"{date}/{date}st.xls")
-	sch_book.save(media+f"{date}/{date}sch.xls")
-	
+	st_book.save(st_path+'.xls')
+	sch_book.save(sch_path+'.xls')
+
+	if loadout.count() == 0:
+		loadout = Loadout()
+		loadout.st_xls=st_path+'.xls'
+		loadout.sch_xls=sch_path+'.xls'
+		loadout.st_images=st_path+'.zip'
+		loadout.sch_images=sch_path+'.zip'
+		loadout.save()

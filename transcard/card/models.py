@@ -9,6 +9,9 @@ class Card(models.Model):
 	surname = models.CharField("Фамилия", max_length=50)
 	photo = models.ImageField(null=True, blank=True, upload_to='images/')
 	pub_date = models.DateTimeField("date published", auto_now_add=True)
+	phone = models.CharField("Телефон", max_length=12)
+	pay_method = models.CharField("оплата",max_length=5)
+
  
 	def __str__(self):
 		return str(self.inn)
@@ -24,7 +27,7 @@ class Loadout(models.Model):
 	st_images = models.ImageField(null=True, blank=True)
 	sch_images = models.ImageField(null=True, blank=True)
 	pub_date = models.DateTimeField("date published", auto_now_add=True)
- 
+	 
 	def __str__(self):
 		return str(self.pub_date)
 

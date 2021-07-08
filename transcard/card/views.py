@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponseRedirect
 
 from . import forms
 from . import models
@@ -11,17 +11,16 @@ def index(request):
 		form = forms.CardForm(request.POST, request.FILES)
 		if form.is_valid():
 			form.save()
-			cron.MyCronJob()
 		else:
 			err = 'Форма введена неверно'
-   
+
 	form = forms.CardForm()
- 
+
 	context = {
-    	"form": form,
+    		'form': form,
 		'error': err,
-    }
- 
+    	}
+
 	return render(request, 'index.html', context) 
 
 def card(request):
@@ -34,3 +33,8 @@ def card(request):
 
 	context = {'cards':cards, 'myFilter':myFilter}
 	return render(request, 'list.html', context)
+
+def generate_loadout(request):
+	cron.MyCronJob()
+	context = {}
+	return HttpResponseRedirect('/./admin/')

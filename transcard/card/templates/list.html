@@ -36,6 +36,8 @@
 						<th>Фамилия</th>
 						<th>Тип</th>
 						<th>Причина</th>
+						<th>Телефон</th>
+						<th>Вид оплаты</th>
 						<th>Фото</th>
 					</tr>
 
@@ -47,6 +49,8 @@
 						<td>{{card.surname}}</td>
 						<td>{{card.type}}</td> 
 						<td>{{card.reason}}</td>
+						<td>{{card.phone}}</td>
+						<td>{{card.pay_method}}</td>
 						<td><a href="/./media/{{card.photo}}">Фото</a></td>
 					</tr>
 					{% endfor %}
