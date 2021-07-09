@@ -9,7 +9,7 @@ class Card(models.Model):
 	surname = models.CharField("Фамилия", max_length=50)
 	photo = models.ImageField(null=True, blank=True, upload_to='images/')
 	pub_date = models.DateTimeField("date published", auto_now_add=True)
-	phone = models.CharField("Телефон", max_length=12)
+	phone = models.CharField("Телефон", max_length=16)
 	pay_method = models.CharField("оплата",max_length=5)
 
  

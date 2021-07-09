@@ -11,25 +11,25 @@ def makedirs(data, media, catalogs):
 		if not os.path.isdir(i):
 			os.mkdir(i)
 
+def xl_write(i, sheet, card):
+		sheet.write(i, 0, card.type)
+		sheet.write(i, 1, card.reason)
+		sheet.write(i, 2, card.name)
+		sheet.write(i, 3, card.surname)
+		sheet.write(i, 4, card.inn)
+		sheet.write(i, 5, card.phone)
+		sheet.write(i, 6, card.pay_method)
+
+def relocate_image(source, dest, card):
+	if os.path.isfile(source):
+		os.replace(source, dest)
+		card.photo.name = dest
+		card.save()
+
 
 def MyCronJob():
 	date = datetime.datetime.utcnow().strftime("%m%d")
 	media = 'media/'
-
-	def xl_wirte(self, dest, card):
-		dest.write(dest, 0, card.type)
-		dest.write(dest, 1, card.reason)
-		dest.write(dest, 2, card.name)
-		dest.write(dest, 3, card.surname)
-		dest.write(dest, 4, card.inn)
-		dest.write(dest, 5, card.phone)
-		dest.write(dest, 6, card.pay_method)
-
-	def relocate_image(self, dest, source, card):
-		if os.path.isfile(source) and not os.path.isfile(dest):
-			os.replace(source, dest)
-			card.photo.name = dest
-			card.save()
 
 
 	#Create a catalog for new images
@@ -49,27 +49,27 @@ def MyCronJob():
 	sch_row = 0
 	st_zip = ZipFile(media + f"{date}/st.zip", 'w')
 	sch_zip = ZipFile(media + f"{date}/sch.zip", 'w')
-	st_path = media+f'{date}/st'
-	sch_path = media+f'{date}/sch'
+	st_path = f'{date}/st'
+	sch_path = f'{date}/sch'
 	for card in cards:
 		if card.pub_date.strftime("%m%d") == date:
 			if card.type == 'Школьная':
-				self.xl_write(sch_sheet, card)
-				self.relocate_image(media+str(card.photo), sch_path+f'/{str(card.inn)+str(card.photo)[-4:]}')
+				xl_write(sch_row, sch_sheet, card)
+				relocate_image(media+str(card.photo), media+sch_path+f'/{str(card.inn)+str(card.photo)[-4:]}', card)
 				sch_zip.write(card.photo.name)
 				sch_row+=1
 				continue
 			if card.type == 'Студенческая':
-				self.xl_write(st_sheet, card)
-				self.relocate_image(media+str(card.photo), st_path+f'/{str(card.inn)+str(card.photo)[-4:]}')
+				xl_write(st_row, st_sheet, card)
+				relocate_image(media+str(card.photo), media+st_path+f'/{str(card.inn)+str(card.photo)[-4:]}', card)
 				st_zip.write(card.photo.name)
 				st_row+=1
 				continue
 		break
 	st_zip.close()
 	sch_zip.close()
-	st_book.save(st_path+'.xls')
-	sch_book.save(sch_path+'.xls')
+	st_book.save(media+st_path+'.xls')
+	sch_book.save(media+sch_path+'.xls')
 
 	if loadout.count() == 0:
 		loadout = Loadout()
