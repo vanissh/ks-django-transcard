@@ -39,14 +39,17 @@ def check_inn(request):
 	if request.method == 'POST':
 		form = forms.InnForm(request.POST, request.FILES)
 		if form.is_valid():
+			models.Ready_inn.objects.all().delete()
 			form.save()
 	elif request.method == 'GET':
 		query = request.GET.get('inn')
-		path = models.Ready_inn.objects.all()[0].excel
-		if query:
-			msg = 'Ваша карта не готова'
-			if cron.check_inn(query, path):
-				msg = 'Ваша карта готова'
+		path = models.Ready_inn.objects.all()
+		if path.count() > 0:
+			path = path[0].excel
+			if query:
+				msg = 'Ваша карта не готова'
+				if cron.check_inn(query, path):
+					msg = 'Ваша карта готова'
 
 	form = forms.InnForm()
 
