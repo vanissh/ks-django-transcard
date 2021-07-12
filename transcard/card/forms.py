@@ -22,3 +22,16 @@ class CardForm(forms.ModelForm):
 				
 			})
 		}
+  
+class InnForm(forms.ModelForm):
+	class Meta:
+		model = models.Ready_inn
+		fields = ['excel', 'inn',]
+
+		widgets = {
+			'inn'   : forms.TextInput(attrs={
+	   			'size': '12',
+				'pattern': '.{12}',
+				'title' :'В ИНН должно быть 12 символов',
+		  	}),
+		}

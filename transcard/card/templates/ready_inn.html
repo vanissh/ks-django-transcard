@@ -1,0 +1,20 @@
+{% extends "base_generic.html" %} 
+{% block content %} 
+{% if user.is_authenticated %}
+
+<form method="post" enctype="multipart/form-data">
+	{% csrf_token %}
+	{{ form.excel }}
+	<button class="btn btn-primary" type="submit">Загрузить</button>
+</form>
+
+{% else %}
+<form method="get">
+	{{ form.inn }}
+	<button class="btn btn-primary" type="submit">Проверить ИНН</button>
+</form>
+{% endif %}
+{% if message %}
+	<p class = 'desc'>{{message}}</p>
+{% endif %}
+{% endblock %}

@@ -1,6 +1,7 @@
 import datetime
 import os
 import xlwt
+import openpyxl
 from zipfile import ZipFile
 
 from .models import Card, Loadout
@@ -78,3 +79,18 @@ def MyCronJob():
 		loadout.st_images=st_path+'.zip'
 		loadout.sch_images=sch_path+'.zip'
 		loadout.save()
+
+def check_inn(query, path):
+	rb = openpyxl.load_workbook('media/' + str(path))
+	names = rb.get_sheet_names()
+	sheet = rb.get_sheet_by_name(names[0])
+	for i in range(1, sheet.max_row):
+		val = sheet.cell(row=i, column=1).value.lower()
+		if 'iin' in val:
+			if query == val[-12:]:
+				return True
+
+	return False
+	
+	
+

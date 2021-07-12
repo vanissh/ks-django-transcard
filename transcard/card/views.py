@@ -17,9 +17,9 @@ def index(request):
 	form = forms.CardForm()
 
 	context = {
-    		'form': form,
+			'form': form,
 		'error': err,
-    	}
+		}
 
 	return render(request, 'index.html', context) 
 
@@ -33,6 +33,30 @@ def card(request):
 
 	context = {'cards':cards, 'myFilter':myFilter}
 	return render(request, 'list.html', context)
+
+def check_inn(request):
+	msg = ''
+	if request.method == 'POST':
+		form = forms.InnForm(request.POST, request.FILES)
+		if form.is_valid():
+			form.save()
+	elif request.method == 'GET':
+		query = request.GET.get('inn')
+		path = models.Ready_inn.objects.all()[0].excel
+		if query:
+			msg = 'Ваша карта не готова'
+			if cron.check_inn(query, path):
+				msg = 'Ваша карта готова'
+
+	form = forms.InnForm()
+
+	context = {
+		'form': form,
+		'message': msg,
+		}
+
+	return render(request, 'ready_inn.html', context)
+	
 
 def generate_loadout(request):
 	cron.MyCronJob()

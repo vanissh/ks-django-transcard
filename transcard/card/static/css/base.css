@@ -142,3 +142,27 @@ button:hover {
 		width: calc(50% - 8px);
 	}
 }
+
+.nav{
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: flex-end;
+}
+
+.nav a{
+	width: 100%;
+	padding: 20px;
+	background: #fff;
+	justify-content: center;
+	box-shadow: 0 2px 5px #ccc;
+	display: inline-flex;
+}
+
+.desc{
+	width: 100%;
+	padding: 20px;
+	background: #fff;
+	justify-content: center;
+	box-shadow: 0 2px 5px #ccc;
+	display: flex;
+}

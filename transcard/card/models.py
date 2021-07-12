@@ -36,3 +36,7 @@ class Loadout(models.Model):
 		verbose_name_plural = 'Файлы'
 		ordering = ["-pub_date"]
 
+class Ready_inn(models.Model):
+	excel = models.FileField(upload_to='ready_inn/')
+	inn = models.CharField("Готовые ИНН", null=True, blank=True, max_length=10000000)
+
